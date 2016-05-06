@@ -12,27 +12,12 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
+
 // //Add an svg element to the map.
 var svg = d3.select(map.getPanes().overlayPane).append("svg"),
     g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 
-// var LeafIcon = L.Icon.extend({
-//     options: {
-//         shadowUrl: 'leaf-shadow.png',
-//         iconSize:     [38, 95],
-//         shadowSize:   [50, 64],
-//         iconAnchor:   [22, 94],
-//         shadowAnchor: [4, 62],
-//         popupAnchor:  [-3, -76]
-//     }
-// });
-
-
-// var darkestIcon = new circleIcon({iconUrl: 'markers/darkest.png'}),
-//     2darkestIcon = new circleIcon({iconUrl: 'markers/2darkest.png'}),
-//     2lightestIcon = new circleIcon({iconUrl: 'markers/2lightest.png'}),
-//     lightestIcon = new circleIcon({iconUrl: 'markers/lightest.png'};
 
 
 //This will be a dictionary object we use to lookup the info for each county.
@@ -45,12 +30,6 @@ function projectPoint(x, y) {
     var point = map.latLngToLayerPoint(new L.LatLng(y, x));
     this.stream.point(point.x, point.y);
 }
-
-
-
-
-
-
 
 
 
@@ -78,10 +57,7 @@ function projectPoint(x, y) {
     })
 
 
-// map.on('click', function(e) {
-//     var facilityName = theData[lat, lon]["FACILITY_NAME"];
-//     var totalReleases = theData[lat, lon]["TOTAL_RELEASES"]+"pounds";
-// });
+
 
 function drawMarkers(data) {
 
@@ -108,15 +84,35 @@ function drawMarkers(data) {
 
         //Draw the marker here. Pass the lat/long value unique to each location
         //and parse the markup to the `bindPopup` method so it shows up when a marker is selected
-          L.marker([lat, lon]).addTo(map)
-         .bindPopup(markup)
-         .openPopup();
+         //  L.marker([lat, lon]).addTo(map)
+         // .bindPopup(markup)
+         // .openPopup();
 
 
         // Alternate marker call uses `myIcon` to draw a different marker.
-        // L.marker([lat, lon], {icon: myIcon}).addTo(map)
-        //  .bindPopup(markup)
-        //  .openPopup();
+         var circleIcon = L.Icon.extend({
+    options: {
+        // shadowUrl: 'markers/lightest.png',
+        iconSize:     [38, 95],
+        // shadowSize:   [50, 64],
+        iconAnchor:   [22, 94],
+        shadowAnchor: [4, 62],
+        popupAnchor:  [-3, -76]
+    }
+});
+  var highestIcon = new circleIcon({iconUrl: 'markers/darkest.png'}),
+    highIcon = new circleIcon({iconUrl: 'markers/2darkest.png'}),
+    lowIcon = new circleIcon({iconUrl: 'markers/2lightest.png'}),
+    lowestIcon = new circleIcon({iconUrl: 'markers/lightest.png'});
+    
+    L.icon = function (options) {
+    return new L.Icon(options);
+};
+L.marker([38.6321348, -92.4013553], {icon: highestIcon}).addTo(map).bindPopup("I am a green leaf.");
+L.marker([38.6321344, -92.4013555], {icon: highIcon}).addTo(map).bindPopup("I am a red leaf.");
+L.marker([38.6321346, -92.4013551], {icon: lowIcon}).addTo(map).bindPopup("I am an orange leaf.");
+L.marker([38.6321342, -92.4013557], {icon: lowestIcon}).addTo(map).bindPopup("I am an orange leaf.");
+ 
 
 
         // Color the markers by (4 colors maybe) by amount released.
@@ -148,27 +144,27 @@ function drawMap() {
 
         console.log(feature);
 
-        // feature.style("fill", function(d) {
+        feature.style("fill", function(d) {
 
-        //     var fips = d.properties.geoid;
-        //     var amount = theData["TOTAL_RELEASES"];
+            var fips = d.properties.geoid;
+            var amount = theData["TOTAL_RELEASES"];
 
-        //     amount = Number(amount);
+            amount = Number(amount);
 
-        //     // This is where we set our colors. There are many ways to do this.
-        //     // This is probably the simplest.
-        //     if (amount <= 10) {
-        //         return "#ffffb2";
-        //     } else if (amount > 10 && amount <= 50) {
-        //         return "#fecc5c";
-        //     } else if (amount> 50 && amount <= 100) {
-        //         return "#fd8d3c";
-        //     } else if (amount > 100) {
-        //         return "#e31a1c";
-        //     }
+            // This is where we set our colors. There are many ways to do this.
+            // This is probably the simplest.
+            if (amount <= 10) {
+                return "#ffffb2";
+            } else if (amount > 10 && amount <= 50) {
+                return "#fecc5c";
+            } else if (amount> 50 && amount <= 100) {
+                return "#fd8d3c";
+            } else if (amount > 100) {
+                return "#e31a1c";
+            }
 
             
-        // })
+        })
 
 
 
